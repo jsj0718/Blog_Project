@@ -16,13 +16,16 @@
 <body>
     <div class="page-header">
         {% if user.is_authenticated %}
+            {% comment %} + 버튼 추가하기 {% endcomment %}
             <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+            <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
         {% endif %}
         <h1><a href="/">Django Girls Blog</a></h1>
     </div>
 
     <div class="content container">
         <div class="row">
+            {% comment %} col-md-8은 그리드 시스템(기기나 뷰포트 크기 증가에 따라 12열이 적절하게 확대되는 반응형, 모바일 우선 유동 그리드 시스템) {% endcomment %}
             <div class="col-md-8">
                 {% block content %}
                 {% endblock %}

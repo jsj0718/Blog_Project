@@ -6,6 +6,7 @@
             <div class="date">
                 <p>published: {{ post.published_date }}</p>
             </div>
+            {% comment %} pk는 Primary key의 약자 (DB의 각 레코드를 식별하는 Key) {% endcomment %}
             <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
             <p>{{ post.text|linebreaksbr }}</p>
         </div>

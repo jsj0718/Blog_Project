@@ -2,7 +2,9 @@
 
 {% block content %}
     <h1>New Post</h1>
+    {% comment %} csrf_token : CSRF 공격을 방어하기 위한 수단 (POST 요청에 한함) {% endcomment %}
     <form method="POST" class="post-form">{% csrf_token %}
+        {% comment %} form.as_p는 각 폼 필드와 라벨을함께 문단으로 감싸서 출력 {% endcomment %}
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>

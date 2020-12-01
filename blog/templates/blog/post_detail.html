@@ -2,13 +2,19 @@
 
 {% block content %}
     <div class="post">
+        {% comment %} publish_date 필드가 존재할 때 {% endcomment %}
         {% if post.published_date %}
             <div class="date">
                 {{ post.published_date }}
             </div>
+        {% comment %} publish_date 필드가 존재하지 않을 때 post_publish로 렌더링 {% endcomment %}
+        {% else %}
+            <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
         {% endif %}
         {% if user.is_authenticated %}
+            {% comment %} 연필 버튼 추가하기 {% endcomment %}
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
         {% endif %}
         <h1>{{ post.title }}</h1>
         <p>{{ post.text|linebreaksbr }}</p>
