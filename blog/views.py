@@ -3,8 +3,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Post
 from .forms import PostForm
+from django.contrib.auth.decorators import login_required       # 로그아웃 상태에서 접근하면 404 에러를 나타낸다.
 
 # Create your views here.
+# render vs redirect : save()의 유무라고 판단
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
@@ -15,6 +17,7 @@ def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     return render(request, 'blog/post_detail.html', {'post' : post})
 
+@login_required(login_url='/accounts/login/')
 def post_new(request):
     # 전송 방식이 POST인 경우
     if request.method == "POST":
@@ -28,13 +31,14 @@ def post_new(request):
             post.author = request.user
             # post.published_date = timezone.now()
             post.save()
-            # post.pk를 이용해 View(post_detail)에게 전송, render와 redirect 차이 알아보기 
+            # post.pk를 이용해 View(post_detail)에게 전송
             return redirect('post_detail', pk = post.pk)
     # 전송 방식이 그 외인 경우 (e.x. GET)
     else:
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form' : form})
 
+@login_required(login_url='/accounts/login/')
 def post_edit(request, pk):
     # URL로부터 pk 매개변수를 받아서 처리
     post = get_object_or_404(Post, pk=pk)
@@ -52,17 +56,20 @@ def post_edit(request, pk):
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
 
+@login_required(login_url='/accounts/login/')
 def post_draft_list(request):
     # published_date_isnull=True로 발행되지 않은 글 목록을 가져온다.
     # order_by('created_date')로 필드에 대해 오름차순 정렬을 수행한다.
     posts = Post.objects.filter(published_date__isnull=True).order_by('created_date')
     return render(request, 'blog/post_draft_list.html', {'posts' : posts})
 
+@login_required(login_url='/accounts/login/')
 def post_publish(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.publish()
     return redirect('post_detail', pk=pk)
 
+@login_required(login_url='/accounts/login/')
 def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.delete()
